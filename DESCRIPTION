@@ -1,0 +1,12 @@
+Package: netfl
+Title: NetFL
+Version: 0.0.0.9000
+Authors@R: 
+    person("Raman", "Ohri", , "ramanohri@gmail.com", role = c("aut", "cre"),
+           comment = c(ORCID = "YOUR-ORCID-ID"))
+Description: Provides tools for loading, cleaning, and analyzing NFL data from public sources.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
+Imports: nflfastR, dplyr, nflreadr
