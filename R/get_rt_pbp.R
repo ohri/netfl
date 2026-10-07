@@ -1,17 +1,36 @@
 #' Get RT PBP
-#' Loads the PBP for the specified week and season, narrows the data to 
+#' Loads the PBP for the specified week and season, narrows the data to
 #' the skinny dataset (just stuff we need), then returns it
 #' @param pSeason season to grab
 #' @param pWeek week to grab
 #' @export
 get_rt_pbp <- function( pSeason, pWeek )
 {
-  sched <- nflfastR::fast_scraper_schedules( season=pSeason) %>%
-    filter(week == pWeek) %>%
-    select(game_id)
-  pbp <- nflfastR::build_nflfastR_pbp( sched )
-  
-  skinny <- select(pbp,"game_id", "play_id","week", "play_type_nfl",
+  sched <- nflreadr::load_schedules(pSeason) %>%
+    dplyr::filter(
+      game_type == "REG",
+      week == pWeek
+    ) %>%
+    dplyr::select(game_id)
+
+  if (nrow(sched) == 0) {
+    stop(
+      "No games found for season ", pSeason,
+      ", week ", pWeek, "."
+    )
+  }
+
+  pbp <- nflfastR::build_nflfastR_pbp(sched)
+
+  if (nrow(pbp) == 0 || !"game_id" %in% names(pbp)) {
+    stop(
+      "The schedule contained ", nrow(sched),
+      " games, but nflfastR loaded no play-by-play data. ",
+      "Verify that the development version of nflfastR is installed."
+    )
+  }
+
+  skinny <- dplyr::select(pbp,"game_id", "play_id","week", "play_type_nfl",
                    "play_type",
                    "rush_attempt",
                    "pass",
