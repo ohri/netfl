@@ -2,19 +2,22 @@
 % Please edit documentation in R/get_rt_pbp.R
 \name{get_rt_pbp}
 \alias{get_rt_pbp}
-\title{Get RT PBP
-Loads the PBP for the specified week and season, narrows the data to
-the skinny dataset (just stuff we need), then returns it}
+\title{Get real-time PBP
+Loads current play-by-play data for a regular-season week and returns the
+columns used by NetFL.}
 \usage{
 get_rt_pbp(pSeason, pWeek)
 }
 \arguments{
-\item{pSeason}{season to grab}
+\item{pSeason}{Season to load.}
 
-\item{pWeek}{week to grab}
+\item{pWeek}{Regular-season week to load, from 1 through 18.}
+}
+\value{
+A data frame containing the selected play-by-play fields.
 }
 \description{
-Get RT PBP
-Loads the PBP for the specified week and season, narrows the data to
-the skinny dataset (just stuff we need), then returns it
+Get real-time PBP
+Loads current play-by-play data for a regular-season week and returns the
+columns used by NetFL.
 }

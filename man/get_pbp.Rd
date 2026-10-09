@@ -3,21 +3,21 @@
 \name{get_pbp}
 \alias{get_pbp}
 \title{Get PBP
-Loads the PBP for the specified week and season, narrows the data to
-the skinny dataset (just stuff we need), then returns it}
+Loads play-by-play data for a season and week and returns the columns used
+by NetFL.}
 \usage{
 get_pbp(pSeason, pWeek)
 }
 \arguments{
-\item{pSeason}{season to grab}
+\item{pSeason}{Season to load.}
 
-\item{pWeek}{week to grab}
+\item{pWeek}{Week to load, from 1 through 22.}
 }
 \value{
-the frame of data for this week, trimmed to what we need
+A data frame containing the selected play-by-play fields.
 }
 \description{
 Get PBP
-Loads the PBP for the specified week and season, narrows the data to
-the skinny dataset (just stuff we need), then returns it
+Loads play-by-play data for a season and week and returns the columns used
+by NetFL.
 }

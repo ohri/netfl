@@ -1,139 +1,33 @@
-#' Get RT PBP
-#' Loads the PBP for the specified week and season, narrows the data to
-#' the skinny dataset (just stuff we need), then returns it
-#' @param pSeason season to grab
-#' @param pWeek week to grab
+#' Get real-time PBP
+#' Loads current play-by-play data for a regular-season week and returns the
+#' columns used by NetFL.
+#' @param pSeason Season to load.
+#' @param pWeek Regular-season week to load, from 1 through 18.
+#' @return A data frame containing the selected play-by-play fields.
 #' @export
-get_rt_pbp <- function( pSeason, pWeek )
-{
-  sched <- nflreadr::load_schedules(pSeason) %>%
-    dplyr::filter(
-      game_type == "REG",
-      week == pWeek
-    ) %>%
+get_rt_pbp <- function(pSeason, pWeek) {
+  validate_season(pSeason)
+  validate_week(pWeek)
+  if (pWeek > 18) {
+    stop("pWeek must be a regular-season week between 1 and 18.", call. = FALSE)
+  }
+
+  sched <- nflreadr::load_schedules(pSeason) |>
+    dplyr::filter(game_type == "REG", week == pWeek) |>
     dplyr::select(game_id)
 
-  if (nrow(sched) == 0) {
-    stop(
-      "No games found for season ", pSeason,
-      ", week ", pWeek, "."
-    )
+  if (nrow(sched) == 0L) {
+    stop("No regular-season games found for the requested season and week.", call. = FALSE)
   }
 
   pbp <- nflfastR::build_nflfastR_pbp(sched)
-
-  if (nrow(pbp) == 0 || !"game_id" %in% names(pbp)) {
+  if (nrow(pbp) == 0L || !"game_id" %in% names(pbp)) {
     stop(
-      "The schedule contained ", nrow(sched),
-      " games, but nflfastR loaded no play-by-play data. ",
-      "Verify that the development version of nflfastR is installed."
+      "nflfastR loaded no play-by-play data for the requested schedule. ",
+      "Verify that the data source is available.",
+      call. = FALSE
     )
   }
 
-  skinny <- dplyr::select(pbp,"game_id", "play_id","week", "play_type_nfl",
-                   "play_type",
-                   "rush_attempt",
-                   "pass",
-                   "fumble",
-                   "rusher_player_id",
-                   "rusher_player_name",
-                   "posteam",
-                   "rush_touchdown",
-                   "rushing_yards",
-                   "run_location",
-                   "pass_attempt",
-                   "sack",
-                   "sack_player_id",
-                   "sack_player_name",
-                   "half_sack_1_player_id",
-                   "half_sack_1_player_name",
-                   "half_sack_2_player_id",
-                   "half_sack_2_player_name",
-                   "passer_player_id",
-                   "passer_player_name",
-                   "complete_pass",
-                   "receiver_player_id",
-                   "receiver_player_name",
-                   "receiving_yards",
-                   "passing_yards",
-                   "pass_touchdown",
-                   "interception",
-                   "interception_player_id",
-                   "interception_player_name",
-                   "return_yards",
-                   "return_touchdown",
-                   "pass_defense_1_player_id",
-                   "pass_defense_1_player_name",
-                   "pass_defense_2_player_id",
-                   "pass_defense_2_player_name",
-                   "qb_hit_1_player_id",
-                   "qb_hit_1_player_name",
-                   "qb_hit_2_player_id",
-                   "qb_hit_2_player_name",
-                   "tackled_for_loss",
-                   "yards_gained",
-                   "solo_tackle",
-                   "solo_tackle_1_player_id",
-                   "solo_tackle_1_player_name",
-                   "solo_tackle_2_player_id",
-                   "solo_tackle_2_player_name",
-                   "solo_tackle_2_team",
-                   "assist_tackle",
-                   "assist_tackle_1_player_id",
-                   "assist_tackle_1_player_name",
-                   "assist_tackle_2_player_id",
-                   "assist_tackle_2_player_name",
-                   "assist_tackle_3_player_id",
-                   "assist_tackle_3_player_name",
-                   "assist_tackle_4_player_id",
-                   "assist_tackle_4_player_name",
-                   "assist_tackle_2_team",
-                   "assist_tackle_3_team",
-                   "assist_tackle_4_team",
-                   "tackle_with_assist",
-                   "tackle_with_assist_1_player_id",
-                   "tackle_with_assist_1_player_name",
-                   "tackle_with_assist_2_player_id",
-                   "tackle_with_assist_2_player_name",
-                   "forced_fumble_player_1_player_id",
-                   "forced_fumble_player_1_player_name",
-                   "forced_fumble_player_2_player_id",
-                   "forced_fumble_player_2_player_name",
-                   "fumble_lost",
-                   "fumbled_1_player_id",
-                   "fumbled_1_player_name",
-                   "fumbled_2_player_id",
-                   "fumbled_2_player_name",
-                   "fumble_recovery_1_player_id",
-                   "fumble_recovery_1_player_name",
-                   "fumble_recovery_2_player_id",
-                   "fumble_recovery_2_player_name",
-                   "fumble_recovery_1_yards",
-                   "fumble_recovery_2_yards",
-                   "kicker_player_id",
-                   "kicker_player_name",
-                   "extra_point_attempt",
-                   "extra_point_result",
-                   "blocked_player_id",
-                   "blocked_player_name",
-                   "touchback",
-                   "kickoff_out_of_bounds",
-                   "kickoff_returner_player_id",
-                   "kickoff_returner_player_name",
-                   "kick_distance",
-                   "field_goal_result",
-                   "punter_player_id",
-                   "punter_player_name",
-                   "punt_inside_twenty",
-                   "yardline_100",
-                   "punt_returner_player_id",
-                   "punt_returner_player_name",
-                   "punt_blocked",
-                   "two_point_conv_result",
-                   "td_player_id",
-                   "td_player_name",
-                   "safety_player_name",
-                   "safety_player_id")
-  return(skinny)
-  #  write.csv(skinny, "~/Downloads/pbp.csv")
+  select_skinny_pbp(pbp)
 }

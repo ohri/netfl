@@ -3,18 +3,22 @@
 \name{get_snaps}
 \alias{get_snaps}
 \title{Get Snaps
-Loads the snap info for the specified week and kicks out SQL
-that can be run in NetFL to set that data in the db.}
+Loads snap counts and generates SQL statements that call the NetFL snap
+scoring procedure.}
 \usage{
 get_snaps(pSeason, pWeek = NULL)
 }
 \arguments{
-\item{pSeason}{season to filter data for}
+\item{pSeason}{Season to load.}
 
-\item{pWeek}{Week to filter data for}
+\item{pWeek}{Optional week to filter, from 1 through 22. If \code{NULL}, all
+weeks in the season are returned.}
+}
+\value{
+A data frame with one \code{sql_out} column.
 }
 \description{
 Get Snaps
-Loads the snap info for the specified week and kicks out SQL
-that can be run in NetFL to set that data in the db.
+Loads snap counts and generates SQL statements that call the NetFL snap
+scoring procedure.
 }

@@ -3,16 +3,19 @@
 \name{get_injuries}
 \alias{get_injuries}
 \title{Get Injuries
-Loads the injury info for the current week and kicks out SQL
-that can be run in NetFL to set player injury status.}
+Loads injury information for a week and generates SQL statements that can
+update player injury status in NetFL.}
 \usage{
 get_injuries(pWeek)
 }
 \arguments{
-\item{pWeek}{Week to filter data for}
+\item{pWeek}{Week to filter, from 1 through 22.}
+}
+\value{
+A data frame containing \code{gsis_id}, \code{report_status}, and \code{sql_out}.
 }
 \description{
 Get Injuries
-Loads the injury info for the current week and kicks out SQL
-that can be run in NetFL to set player injury status.
+Loads injury information for a week and generates SQL statements that can
+update player injury status in NetFL.
 }

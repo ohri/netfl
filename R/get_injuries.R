@@ -1,27 +1,22 @@
 #' Get Injuries
-#' Loads the injury info for the current week and kicks out SQL
-#' that can be run in NetFL to set player injury status.
-#' @param pWeek Week to filter data for
+#' Loads injury information for a week and generates SQL statements that can
+#' update player injury status in NetFL.
+#' @param pWeek Week to filter, from 1 through 22.
+#' @return A data frame containing `gsis_id`, `report_status`, and `sql_out`.
 #' @export
-get_injuries <- function( pWeek )
-{
-  nflreadr::.clear_cache()
-  inj <- nflreadr::load_injuries() |>
-    dplyr::filter(week==pWeek) |>
-    dplyr::filter(report_status != "NA")
+get_injuries <- function(pWeek) {
+  validate_week(pWeek)
 
-  inj_sql <- inj %>%
-    select( gsis_id, report_status ) %>%
-    mutate(
-      sql_out = paste("update tblplayers set injurystatus='",
-                substr(report_status,1,1),
-                "' where gsis='",
-                gsis_id,
-                "';",
-                sep=""
-                )
+  nflreadr::load_injuries() |>
+    dplyr::filter(week == pWeek, !is.na(report_status), report_status != "NA") |>
+    dplyr::select(gsis_id, report_status) |>
+    dplyr::mutate(
+      sql_out = paste0(
+        "update tblplayers set injurystatus=",
+        sql_literal(substr(report_status, 1L, 1L)),
+        " where gsis=",
+        sql_literal(gsis_id),
+        ";"
+      )
     )
-  return(inj_sql)
-#  write.csv(inj_sql, "~/Downloads/injuries.csv")
 }
-

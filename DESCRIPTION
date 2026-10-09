@@ -1,12 +1,21 @@
 Package: netfl
-Title: NetFL
+Title: NFL Data Tools for NetFL
 Version: 0.0.0.9000
+Author: Raman Ohri [aut, cre]
+Maintainer: Raman Ohri <ramanohri@gmail.com>
 Authors@R: 
-    person("Raman", "Ohri", , "ramanohri@gmail.com", role = c("aut", "cre"),
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: Provides tools for loading, cleaning, and analyzing NFL data from public sources.
+    person("Raman", "Ohri", , "ramanohri@gmail.com", role = c("aut", "cre"))
+Description: Loads NFL play-by-play, injury, and snap-count data from public
+    sources and prepares it for analysis or loading into the NetFL database.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
+URL: https://github.com/ohri/netfl
+BugReports: https://github.com/ohri/netfl/issues
+Depends:
+    R (>= 4.1.0)
 Imports: nflfastR, dplyr, nflreadr
+Suggests:
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
