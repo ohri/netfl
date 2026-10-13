@@ -18,6 +18,7 @@ library(netfl)
 
 pbp <- get_pbp(2024, 1)
 live_pbp <- get_rt_pbp(2024, 1)
+get_games(2024, 1, "pbp_games")
 injuries <- get_injuries(1)
 snaps <- get_snaps(2024, 1)
 ```
